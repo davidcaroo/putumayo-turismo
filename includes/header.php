@@ -18,7 +18,7 @@ $modo = isset($_COOKIE['modo']) ? $_COOKIE['modo'] : 'claro';
 $destinos_menu = [];
 try {
     if (isset($pdo) && $pdo instanceof PDO) {
-        $stmt_menu = $pdo->prepare("SELECT id, nombre, slug, ubicacion FROM destinos WHERE activo = 1 ORDER BY nombre LIMIT 8");
+        $stmt_menu = $pdo->prepare("SELECT id, nombre, slug, ubicacion FROM destinos WHERE activo = 1 ORDER BY ordenÑ LIMIT 15");
         $stmt_menu->execute();
         $destinos_menu = $stmt_menu->fetchAll(PDO::FETCH_ASSOC);
     }
