@@ -1,0 +1,109 @@
+# ============================================
+# PUTUMAYO TURISMO - .htaccess
+# URLs amigables y seguridad
+# ============================================
+
+RewriteEngine On
+RewriteBase /putumayo_tourism/
+
+# ============================================
+# PROTECCIÓN Y SEGURIDAD
+# ============================================
+
+Options -Indexes
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sql|md|json|env)$">
+    Require all denied
+</FilesMatch>
+
+<Files "config.php">
+    Require all denied
+</Files>
+
+# ============================================
+# URLs AMIGABLES - PÁGINAS PÚBLICAS
+# ============================================
+
+## DESTINOS
+RewriteRule ^destinos/?$ destinos.php [L,QSA]
+RewriteRule ^destino/([a-zA-Z0-9-]+)/?$ destino-detalle.php?slug=$1 [L,QSA]
+
+## EVENTOS
+RewriteRule ^eventos/?$ eventos.php [L,QSA]
+RewriteRule ^evento/([a-zA-Z0-9-]+)/?$ evento-detalle.php?slug=$1 [L,QSA]
+
+## RESERVAS
+RewriteRule ^reservas/?$ reservas.php [L,QSA]
+
+## ADMIN (mantener URLs normales)
+RewriteRule ^admin/(.*)$ admin/$1 [L,QSA]
+
+## OTRAS PÁGINAS
+RewriteRule ^galeria/?$ galeria.php [L,QSA]
+RewriteRule ^contacto/?$ contacto.php [L,QSA]
+RewriteRule ^contacto/?$ contacto.php [L,QSA]
+RewriteRule ^reservas/?$ reservas.php [L,QSA]
+RewriteRule ^reservar/([a-zA-Z0-9-]+)/?$ reservas.php?destino_slug=$1 [L,QSA]
+
+# AUTENTICACIÓN
+RewriteRule ^login/?$ login.php [L,QSA]
+RewriteRule ^registro/?$ registro.php [L,QSA]
+RewriteRule ^logout/?$ logout.php [L,QSA]
+
+# ============================================
+# ÁREA DE USUARIO
+# ============================================
+
+RewriteRule ^perfil/?$ usuario/dashboard.php [L,QSA]
+RewriteRule ^mis-reservas/?$ usuario/reservas.php [L,QSA]
+RewriteRule ^mis-reservas/([0-9]+)/?$ usuario/detalle_reserva.php?id=$1 [L,QSA]
+
+# ============================================
+# ÁREA DE ADMINISTRACIÓN
+# ============================================
+
+RewriteRule ^admin/?$ admin/dashboard.php [L,QSA]
+RewriteRule ^admin/destinos/?$ admin/gestion-destinos.php [L,QSA]
+RewriteRule ^admin/actividades/?$ admin/gestion-actividades.php [L,QSA]
+RewriteRule ^admin/reservas/?$ admin/gestion-reservas.php [L,QSA]
+RewriteRule ^admin/galeria/?$ admin/gestion-galeria.php [L,QSA]
+RewriteRule ^admin/usuarios/?$ admin/gestion-usuarios.php [L,QSA]
+RewriteRule ^admin/eventos/?$ admin/eventos.php [L,QSA]
+RewriteRule ^admin/resenas/?$ admin/gestion-resenas.php [L,QSA]
+RewriteRule ^admin/configuracion/?$ admin/configuracion.php [L,QSA]
+RewriteRule ^admin/whatsapp/?$ admin/whatsapp-asesores.php [L,QSA]
+
+# ============================================
+# AJAX (mantener acceso directo)
+# ============================================
+RewriteCond %{REQUEST_URI} ^/putumayo_tourism/ajax/
+RewriteRule ^ - [L]
+
+# ============================================
+# ARCHIVOS ESTÁTICOS
+# ============================================
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# ============================================
+# ERRORES PERSONALIZADOS
+# ============================================
+ErrorDocument 404 /putumayo_tourism/404.php
+ErrorDocument 403 /putumayo_tourism/403.php
+
+# ============================================
+# SEGURIDAD ADICIONAL
+# ============================================
+
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC]
+RewriteRule ^(.*)$ - [F,L]
+
+RewriteCond %{QUERY_STRING} union.*select [NC,OR]
+RewriteCond %{QUERY_STRING} concat.*\( [NC]
+RewriteRule ^(.*)$ - [F,L]
+
+AddDefaultCharset UTF-8
